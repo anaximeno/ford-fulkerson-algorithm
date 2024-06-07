@@ -1,6 +1,7 @@
 package asa.fordfulkerson;
 
 import javax.swing.*;
+import java.awt.event.*;
 
 import com.mxgraph.layout.mxCircleLayout;
 import com.mxgraph.swing.*;
@@ -9,6 +10,9 @@ import org.jgrapht.ext.*;
 import org.jgrapht.graph.*;
 
 public class App extends JFrame {
+    private mxCircleLayout layout;
+    private JGraphXAdapter<String, DefaultEdge> jgxAdapter;
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> new App(640, 480, 100).setVisible(true));
     }
@@ -24,7 +28,7 @@ public class App extends JFrame {
                 new DefaultDirectedGraph<String, DefaultEdge>(DefaultEdge.class));
 
         // Create a visualization component
-        JGraphXAdapter<String, DefaultEdge> jgxAdapter = new JGraphXAdapter<>(graph);
+        jgxAdapter = new JGraphXAdapter<>(graph);
 
         mxGraphComponent component = new mxGraphComponent(jgxAdapter);
         component.setConnectable(false);
@@ -39,8 +43,18 @@ public class App extends JFrame {
         graph.addEdge("V1", "V2");
         graph.addEdge("V2", "V3");
 
-        mxCircleLayout layout = new mxCircleLayout(jgxAdapter);
+        layout = new mxCircleLayout(jgxAdapter);
+        adjustLayout(width, height, graphRadius);
 
+        component.addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                adjustLayout(e.getComponent().getWidth(), e.getComponent().getHeight(), layout.getRadius());
+            }
+        });
+    }
+
+    private void adjustLayout(int width, int height, double graphRadius) {
         layout.setX0((width / 2.0) - graphRadius);
         layout.setY0((height / 2.0) - graphRadius);
         layout.setRadius(graphRadius);
