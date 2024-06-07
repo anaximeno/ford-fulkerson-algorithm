@@ -49,7 +49,9 @@ public class App extends JFrame {
         component.addComponentListener(new ComponentAdapter() {
             @Override
             public void componentResized(ComponentEvent e) {
-                adjustLayout(e.getComponent().getWidth(), e.getComponent().getHeight(), layout.getRadius());
+                final int width = e.getComponent().getWidth();
+                final int height = e.getComponent().getHeight();
+                adjustLayout(width, height, layout.getRadius());
             }
         });
     }
