@@ -18,7 +18,7 @@ public class App extends JFrame {
     private mxCircleLayout layout;
 
     public static void main(String[] args) {
-        final App app = new App(640, 480, 100);
+        final App app = new App(640, 480, 200);
         SwingUtilities.invokeLater(() -> app.setVisible(true));
     }
 
@@ -41,7 +41,7 @@ public class App extends JFrame {
         // Add visualization component to the frame
         getContentPane().add(component);
 
-        Example example = Example.fromType(ExampleType.OUT_OF_SCOPE);
+        Example example = Example.fromType(ExampleType.EXTREME);
         VertexNamer vertexNamer = new VertexNamer(example.source, example.sink);
 
         initializeGraph(example.matrix, vertexNamer);
