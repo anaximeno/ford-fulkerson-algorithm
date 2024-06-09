@@ -37,7 +37,7 @@ public class FordFulkerson {
             target = vertexNamer.nameVertex(path.get(i + 1));
 
             if ((edge = visualGraph.getEdge(source, target)) != null)
-                edge.setFlow(pathFlow);
+                edge.setFlow(pathFlow + edge.getFlow());
         }
     }
 
