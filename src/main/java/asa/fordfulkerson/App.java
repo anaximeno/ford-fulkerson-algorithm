@@ -19,7 +19,12 @@ public class App extends JFrame {
 
     public static void main(String[] args) {
         final App app = new App(640, 480, 200);
-        SwingUtilities.invokeLater(() -> app.setVisible(true));
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                app.setVisible(true);
+            }
+        });
     }
 
     public App(int width, int height, int graphRadius) {
