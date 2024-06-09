@@ -97,6 +97,8 @@ public class FordFulkerson {
             path.add(s);
             Collections.reverse(path);
             displayPathFlow(path, pathFlow);
+            // TODO: add a dramatic sleep here for better visualization
+            // during the presentation?
 
             for (v = t; v != s; v = parent[v]) {
                 u = parent[v];
