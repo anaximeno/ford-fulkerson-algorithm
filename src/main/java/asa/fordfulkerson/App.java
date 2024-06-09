@@ -11,8 +11,9 @@ import org.jgrapht.ext.*;
 import org.jgrapht.graph.*;
 
 public class App extends JFrame {
-    private mxCircleLayout layout;
+    private ListenableGraph<String, FlowGraphEdge> graph;
     private JGraphXAdapter<String, FlowGraphEdge> jgxAdapter;
+    private mxCircleLayout layout;
 
     public static void main(String[] args) {
         final App app = new App(640, 480, 100);
@@ -20,14 +21,13 @@ public class App extends JFrame {
     }
 
     public App(int width, int height, int graphRadius) {
-        super("Ford Fulkerson");
+        super("ASA - Ford Fulkerson Algorithm");
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(width, height);
 
         // Create a graph
-        ListenableGraph<String, FlowGraphEdge> graph = new DefaultListenableGraph<>(
-                new DefaultDirectedGraph<String, FlowGraphEdge>(FlowGraphEdge.class));
+        graph = new DefaultListenableGraph<>(new DefaultDirectedGraph<String, FlowGraphEdge>(FlowGraphEdge.class));
 
         // Create a visualization component
         jgxAdapter = new JGraphXAdapter<>(graph);
@@ -35,15 +35,11 @@ public class App extends JFrame {
         mxGraphComponent component = new mxGraphComponent(jgxAdapter);
         component.setConnectable(false);
         component.getGraph().setAllowDanglingEdges(false);
+
         // Add visualization component to the frame
         getContentPane().add(component);
 
-        // Add vertices and edges
-        graph.addVertex("V1");
-        graph.addVertex("V2");
-        graph.addVertex("V3");
-        graph.addEdge("V1", "V2", new FlowGraphEdge(10, 0));
-        graph.addEdge("V2", "V3", new FlowGraphEdge(5, 0));
+        initializeGraph(ExampleCases.EXTREME);
 
         layout = new mxCircleLayout(jgxAdapter);
         adjustLayout(width, height, graphRadius);
@@ -63,6 +59,23 @@ public class App extends JFrame {
         layout.setY0((height / 2.0) - graphRadius);
         layout.setRadius(graphRadius);
         layout.setMoveCircle(true);
+        layout.setUseBoundingBox(true);
         layout.execute(jgxAdapter.getDefaultParent());
+    }
+
+    private void initializeGraph(int[][] adjMatrix) {
+        final int size = adjMatrix.length; // we suppose it's a square matrix
+
+        for (int i = 0; i < size; ++i) {
+            graph.addVertex("Ponto " + i);
+        }
+
+        for (int i = 0; i < size; ++i) {
+            for (int j = 0; j < size; ++j) {
+                if (adjMatrix[i][j] > 0) {
+                    graph.addEdge("Ponto " + i, "Ponto " + j, new FlowGraphEdge(adjMatrix[i][j], 0));
+                }
+            }
+        }
     }
 }
