@@ -70,19 +70,18 @@ public class FordFulkerson {
         return false;
     }
 
-    public int maxFlow(int s, int t) {
+    public MaxFlowReport maxFlow(int s, int t) {
         resetVisualGraphFlow();
 
         int u, v;
 
-        int rGraph[][] = new int[size][size];
-        for (u = 0; u < size; u++)
-            for (v = 0; v < size; v++)
-                rGraph[u][v] = matrix[u][v];
+        int rGraph[][] = matrix.clone();
 
         int parent[] = new int[size];
 
         int maxFlow = 0;
+
+        List<List<Integer>> paths = new ArrayList<>();
 
         while (bfs(rGraph, s, t, parent)) {
             int pathFlow = Integer.MAX_VALUE;
@@ -97,6 +96,8 @@ public class FordFulkerson {
             path.add(s);
             Collections.reverse(path);
             displayPathFlow(path, pathFlow);
+            paths.add(path);
+
             // TODO: add a dramatic sleep here for better visualization
             // during the presentation?
 
@@ -109,6 +110,6 @@ public class FordFulkerson {
             maxFlow += pathFlow;
         }
 
-        return maxFlow;
+        return new MaxFlowReport(maxFlow, paths);
     }
 }

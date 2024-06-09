@@ -42,14 +42,14 @@ public class App extends JFrame {
         getContentPane().add(component);
 
         Example example = Example.fromType(ExampleType.EXTREME);
-        VertexNamer vertexNamer = new VertexNamer("Nó ", example.source, example.sink);
+        VertexNamer vertexNamer = new VertexNamer("Vertex ", example.source, example.sink);
 
         initializeGraph(example.matrix, vertexNamer);
 
         FordFulkerson f = new FordFulkerson(example.matrix, graph, vertexNamer);
-        int maxFlow = f.maxFlow(example.source, example.sink);
+        MaxFlowReport report = f.maxFlow(example.source, example.sink);
 
-        System.out.println("Max Flow: " + maxFlow);
+        System.out.println("Max Flow: " + report.maxFlow);
 
         layout = new mxCircleLayout(jgxAdapter);
         adjustLayout(width, height, graphRadius);
