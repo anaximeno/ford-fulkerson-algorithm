@@ -1,11 +1,12 @@
 package asa.fordfulkerson;
 
 public class VertexNamer {
-    static final String prefix = "Ponto ";
+    final String prefix;
 
-    int source, sink;
+    private int source, sink;
 
-    public VertexNamer(int sourceVertex, int sinkVertex) {
+    public VertexNamer(String prefix, int sourceVertex, int sinkVertex) {
+        this.prefix = prefix;
         this.source = sourceVertex;
         this.sink = sinkVertex;
     }

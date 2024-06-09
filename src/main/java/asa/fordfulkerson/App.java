@@ -42,7 +42,7 @@ public class App extends JFrame {
         getContentPane().add(component);
 
         Example example = Example.fromType(ExampleType.EXTREME);
-        VertexNamer vertexNamer = new VertexNamer(example.source, example.sink);
+        VertexNamer vertexNamer = new VertexNamer("Nó ", example.source, example.sink);
 
         initializeGraph(example.matrix, vertexNamer);
 
