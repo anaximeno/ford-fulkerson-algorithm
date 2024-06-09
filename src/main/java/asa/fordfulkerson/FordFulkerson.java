@@ -1,24 +1,44 @@
 package asa.fordfulkerson;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
 import org.jgrapht.ListenableGraph;
 
 public class FordFulkerson {
-    final int[][] adjGraph;
+    final int[][] matrix;
     final ListenableGraph<String, FlowGraphEdge> visualGraph;
     final int size;
+    final VertexNamer vertexNamer;
 
-    public FordFulkerson(int[][] adjGraph, ListenableGraph<String, FlowGraphEdge> visualGraph) {
-        this.adjGraph = adjGraph;
-        this.size = adjGraph.length;
+    public FordFulkerson(int[][] matrix, ListenableGraph<String, FlowGraphEdge> visualGraph, VertexNamer vertexNamer) {
+        this.matrix = matrix;
+        this.size = matrix.length;
         this.visualGraph = visualGraph;
+        this.vertexNamer = vertexNamer;
     }
 
     private void resetVisualGraphFlow() {
         for (FlowGraphEdge edge : visualGraph.edgeSet())
             edge.setFlow(0);
+    }
+
+    private void displayPathFlow(List<Integer> path, int pathFlow) {
+        System.out.println("PathFlow: " + path.toString() + " => " + pathFlow);
+
+        FlowGraphEdge edge;
+        String source, target;
+
+        for (int i = 0; i < path.size() - 1; ++i) {
+            source = vertexNamer.nameVertex(path.get(i));
+            target = vertexNamer.nameVertex(path.get(i + 1));
+
+            if ((edge = visualGraph.getEdge(source, target)) != null)
+                edge.setFlow(pathFlow);
+        }
     }
 
     private boolean bfs(int rGraph[][], int s, int t, int parent[]) {
@@ -58,7 +78,7 @@ public class FordFulkerson {
         int rGraph[][] = new int[size][size];
         for (u = 0; u < size; u++)
             for (v = 0; v < size; v++)
-                rGraph[u][v] = adjGraph[u][v];
+                rGraph[u][v] = matrix[u][v];
 
         int parent[] = new int[size];
 
@@ -66,11 +86,17 @@ public class FordFulkerson {
 
         while (bfs(rGraph, s, t, parent)) {
             int pathFlow = Integer.MAX_VALUE;
+            List<Integer> path = new ArrayList<>();
 
             for (v = t; v != s; v = parent[v]) {
                 u = parent[v];
                 pathFlow = Math.min(pathFlow, rGraph[u][v]);
+                path.add(v);
             }
+
+            path.add(s);
+            Collections.reverse(path);
+            displayPathFlow(path, pathFlow);
 
             for (v = t; v != s; v = parent[v]) {
                 u = parent[v];
@@ -80,8 +106,6 @@ public class FordFulkerson {
 
             maxFlow += pathFlow;
         }
-
-        System.out.println(rGraph);
 
         return maxFlow;
     }

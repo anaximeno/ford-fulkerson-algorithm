@@ -41,12 +41,12 @@ public class App extends JFrame {
         // Add visualization component to the frame
         getContentPane().add(component);
 
-        Example example = Example.fromType(ExampleType.EXTREME);
+        Example example = Example.fromType(ExampleType.OUT_OF_SCOPE);
         VertexNamer vertexNamer = new VertexNamer(example.source, example.sink);
 
         initializeGraph(example.matrix, vertexNamer);
 
-        FordFulkerson f = new FordFulkerson(example.matrix, graph);
+        FordFulkerson f = new FordFulkerson(example.matrix, graph, vertexNamer);
         int maxFlow = f.maxFlow(example.source, example.sink);
 
         System.out.println("Max Flow: " + maxFlow);
