@@ -5,16 +5,18 @@ import java.awt.event.*;
 
 import com.mxgraph.layout.mxCircleLayout;
 import com.mxgraph.swing.*;
+
 import org.jgrapht.*;
 import org.jgrapht.ext.*;
 import org.jgrapht.graph.*;
 
 public class App extends JFrame {
     private mxCircleLayout layout;
-    private JGraphXAdapter<String, DefaultEdge> jgxAdapter;
+    private JGraphXAdapter<String, FlowGraphEdge> jgxAdapter;
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new App(640, 480, 100).setVisible(true));
+        final App app = new App(640, 480, 100);
+        SwingUtilities.invokeLater(() -> app.setVisible(true));
     }
 
     public App(int width, int height, int graphRadius) {
@@ -24,8 +26,8 @@ public class App extends JFrame {
         setSize(width, height);
 
         // Create a graph
-        ListenableGraph<String, DefaultEdge> graph = new DefaultListenableGraph<>(
-                new DefaultDirectedGraph<String, DefaultEdge>(DefaultEdge.class));
+        ListenableGraph<String, FlowGraphEdge> graph = new DefaultListenableGraph<>(
+                new DefaultDirectedGraph<String, FlowGraphEdge>(FlowGraphEdge.class));
 
         // Create a visualization component
         jgxAdapter = new JGraphXAdapter<>(graph);
@@ -40,8 +42,8 @@ public class App extends JFrame {
         graph.addVertex("V1");
         graph.addVertex("V2");
         graph.addVertex("V3");
-        graph.addEdge("V1", "V2");
-        graph.addEdge("V2", "V3");
+        graph.addEdge("V1", "V2", new FlowGraphEdge(10, 0));
+        graph.addEdge("V2", "V3", new FlowGraphEdge(5, 0));
 
         layout = new mxCircleLayout(jgxAdapter);
         adjustLayout(width, height, graphRadius);
