@@ -10,6 +10,8 @@ import org.jgrapht.*;
 import org.jgrapht.ext.*;
 import org.jgrapht.graph.*;
 
+import asa.fordfulkerson.examples.*;
+
 public class App extends JFrame {
     private ListenableGraph<String, FlowGraphEdge> graph;
     private JGraphXAdapter<String, FlowGraphEdge> jgxAdapter;
@@ -39,7 +41,15 @@ public class App extends JFrame {
         // Add visualization component to the frame
         getContentPane().add(component);
 
-        initializeGraph(ExampleCases.EXTREME);
+        Example example = Example.fromType(ExampleType.EXTREME);
+        VertexNamer vertexNamer = new VertexNamer(example.source, example.sink);
+
+        initializeGraph(example.matrix, vertexNamer);
+
+        FordFulkerson f = new FordFulkerson(example.matrix, graph);
+        int maxFlow = f.maxFlow(example.source, example.sink);
+
+        System.out.println("Max Flow: " + maxFlow);
 
         layout = new mxCircleLayout(jgxAdapter);
         adjustLayout(width, height, graphRadius);
@@ -63,17 +73,20 @@ public class App extends JFrame {
         layout.execute(jgxAdapter.getDefaultParent());
     }
 
-    private void initializeGraph(int[][] adjMatrix) {
-        final int size = adjMatrix.length; // we suppose it's a square matrix
+    private void initializeGraph(int[][] matrix, VertexNamer namer) {
+        // we suppose it's a square matrix
+        final int size = matrix.length;
 
-        for (int i = 0; i < size; ++i) {
-            graph.addVertex("Ponto " + i);
-        }
+        for (int i = 0; i < size; ++i)
+            graph.addVertex(namer.nameVertex(i));
 
         for (int i = 0; i < size; ++i) {
             for (int j = 0; j < size; ++j) {
-                if (adjMatrix[i][j] > 0) {
-                    graph.addEdge("Ponto " + i, "Ponto " + j, new FlowGraphEdge(adjMatrix[i][j], 0));
+                if (matrix[i][j] > 0) {
+                    String source = namer.nameVertex(i);
+                    String target = namer.nameVertex(j);
+                    FlowGraphEdge edge = FlowGraphEdge.fromCapacity(matrix[i][j]);
+                    graph.addEdge(source, target, edge);
                 }
             }
         }

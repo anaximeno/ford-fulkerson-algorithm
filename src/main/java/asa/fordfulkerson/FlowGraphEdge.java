@@ -11,6 +11,10 @@ public class FlowGraphEdge extends DefaultEdge {
         this.flow = flow;
     }
 
+    public static FlowGraphEdge fromCapacity(int capacity) {
+        return new FlowGraphEdge(capacity, 0);
+    }
+
     public int getFlow() {
         return flow;
     }
